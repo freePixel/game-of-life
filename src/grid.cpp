@@ -1,16 +1,5 @@
 #include "grid.h"
 
-grid::grid()
-{
-    window = SDL_CreateWindow("game of life" , SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,wx,wy,0);
-    render = SDL_CreateRenderer(window , - 1 , 0);
-}
-
-grid::~grid()
-{
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(render);
-}
 
 void grid::update()
 {
@@ -109,17 +98,4 @@ bool grid::get(int x , int y)
     return false;
 }
 
-void grid::draw()
-{
-    SDL_RenderClear(render);
-    SDL_SetRenderDrawColor(render , 255 , 255 , 255 , 255);
-    for(auto it = data.begin(); it != data.end(); ++it)
-    {
-        SDL_FRect* r = new SDL_FRect{(float)wx*it->x / SIZE,(float)wy*it->y / SIZE,(float)wx/SIZE,(float)wy/SIZE};
-        SDL_RenderFillRectF(render , r);
-        delete r;
-    }
-    SDL_SetRenderDrawColor(render,0,0,0,0);
-    SDL_RenderPresent(render);
-}
 

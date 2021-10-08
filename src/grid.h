@@ -6,7 +6,6 @@
 #include <iostream>
 #include <vector>
 
-#define SIZE 40
 
 
 struct point
@@ -31,27 +30,21 @@ struct cell
 class grid
 {
     public:
-        grid();
-        ~grid();
+        grid(){};
+
         void setf(int x , int y , bool alive);
         bool get(int x , int y);
 
         void fill_random(int alive_probability , int length);
-
+        std::vector<point> data;
         void update();
-        void draw();
     private:
 
         void next_state(int x , int y);
 
-        std::vector<point> data;
-
-        SDL_Window* window = nullptr;
-        SDL_Renderer* render = nullptr;
         std::vector<cell> changes;
         int neightbour_count(int x , int y);
-        int wx = 800;
-        int wy = 800;
+        
 };
 
 
