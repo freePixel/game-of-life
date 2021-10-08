@@ -4,7 +4,7 @@
 int main(int argc ,char* argv[])
 {
     grid* grd = new grid();
-    grd->fill_random(20);
+    grd->fill_random(20, 20);
     SDL_Event* e = new SDL_Event();
     bool running = true;
     while(running)

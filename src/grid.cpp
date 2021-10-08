@@ -1,40 +1,55 @@
 #include "grid.h"
 
-
-
 grid::grid()
 {
     window = SDL_CreateWindow("game of life" , SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,wx,wy,0);
     render = SDL_CreateRenderer(window , - 1 , 0);
-    for(int i=0;i<SIZE;i++)
-    {
-        data[i].fill(false);
-    }
+}
+
+grid::~grid()
+{
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(render);
 }
 
 void grid::update()
 {
+    std::cout << data.size() << "\n";
     changes.clear();
-    for(int y=0;y<SIZE;y++)
-    {
-        for(int x=0;x<SIZE;x++)
+    for(int i=0;i<data.size();i++){
+        int x = data[i].x;
+        int y = data[i].y;
+        for(int dx=-1;dx<=1;dx++)
         {
-            int c = neightbour_count(x,y);
-            if(data[y][x])
+
+            for(int dy=-1;dy<=1;dy++)
             {
-                if(c < 2 || c > 3) changes.push_back({x,y,false});
-            }
-            else{
-                if(c == 3) changes.push_back({x,y,true});
+                next_state(x + dx , y + dy);
             }
         }
+        
     }
     for(int i=0;i<changes.size();i++)
     {
-        cell s = changes[i];
-        data[s.y][s.x] = s.status;
+        setf(changes[i].p.x, changes[i].p.y , changes[i].status);
     }
 }
+
+
+void grid::next_state(int x , int y)
+{
+    int c = neightbour_count(x , y);
+    bool st = get(x,y);
+    if(st == false && c == 3)
+    {
+        changes.push_back(cell{point(x,y),true});
+    }
+    if(st == true && (c < 2 || c > 3))
+    {
+        changes.push_back(cell{point(x,y),false});
+    }
+}
+
 
 int grid::neightbour_count(int x , int y)
 {
@@ -52,53 +67,59 @@ int grid::neightbour_count(int x , int y)
     return c;
 }
 
-void grid::fill_random(int alive_probability)
+void grid::fill_random(int alive_probability , int length)
 {
-    for(int y=0;y<SIZE;y++)
+    for(int y=0;y<length;y++)
     {
-        for(int x=0;x<SIZE;x++)
+        for(int x=0;x<length;x++)
         {
             int r = rand() % 100;
-            if(alive_probability > r) data[y][x] = true;
+            if(alive_probability > r)
+            {
+                setf(x , y , true);
+            }
         }
     }
 }
 
-grid::~grid()
+void grid::setf(int x , int y , bool alive)
 {
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(render);
-}
-
-void grid::set(int x , int y , bool alive)
-{
-    data[y][x] = alive;
+    if(alive == false)
+    {
+        for(int i=0;i<data.size();i++)
+        {
+            if(data[i].x == x && data[i].y == y) data.erase(data.begin() + i);
+        }
+    }
+    else{
+        for(int i=0;i<data.size();i++)
+        {
+            if(data[i].x == x && data[i].y == y) return;
+        }
+        data.push_back({x,y});
+    }
 }
 
 bool grid::get(int x , int y)
 {
-    if(x < 0 || x > SIZE) return false;
-    if(y < 0 || y > SIZE) return false;
-
-    return data[y][x];
+    for(int i=0;i<data.size();i++)
+    {
+        if(data[i].x == x && data[i].y == y) return true;
+    }
+    return false;
 }
 
 void grid::draw()
 {
     SDL_RenderClear(render);
     SDL_SetRenderDrawColor(render , 255 , 255 , 255 , 255);
-    for(int y=0;y<SIZE;y++)
+    for(auto it = data.begin(); it != data.end(); ++it)
     {
-        for(int x=0;x<SIZE;x++)
-        {
-            if(data[y][x])
-            {
-                SDL_FRect* r = new SDL_FRect{(float)wx*x / SIZE,(float)wy*y / SIZE,(float)wx/SIZE,(float)wy/SIZE};
-                SDL_RenderFillRectF(render , r);
-                delete r;
-            }
-        }
+        SDL_FRect* r = new SDL_FRect{(float)wx*it->x / SIZE,(float)wy*it->y / SIZE,(float)wx/SIZE,(float)wy/SIZE};
+        SDL_RenderFillRectF(render , r);
+        delete r;
     }
     SDL_SetRenderDrawColor(render,0,0,0,0);
     SDL_RenderPresent(render);
 }
+

@@ -8,32 +8,48 @@
 
 #define SIZE 40
 
+
+struct point
+{
+    int x = 0;
+    int y = 0;
+    point(int x , int y)
+    {
+        this->x = x;
+        this->y = y;
+    }
+
+};
+
 struct cell
 {
-    int x , y;
+    point p;
     bool status;
 };
+
 
 class grid
 {
     public:
         grid();
         ~grid();
-        void set(int x , int y , bool alive);
+        void setf(int x , int y , bool alive);
         bool get(int x , int y);
 
-        void fill_random(int alive_probability);
+        void fill_random(int alive_probability , int length);
 
         void update();
         void draw();
     private:
-        std::array<std::array<bool,SIZE>,SIZE> data;
+
+        void next_state(int x , int y);
+
+        std::vector<point> data;
 
         SDL_Window* window = nullptr;
         SDL_Renderer* render = nullptr;
         std::vector<cell> changes;
         int neightbour_count(int x , int y);
-
         int wx = 800;
         int wy = 800;
 };
