@@ -17,7 +17,6 @@ int main(int argc ,char* argv[])
                 running = false;
                 break;
                 case SDL_KEYDOWN:
-                std::cout << "key_pressed" << "\n";
                 grd->update();
                 break;
             }
