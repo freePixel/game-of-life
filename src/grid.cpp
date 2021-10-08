@@ -4,19 +4,20 @@
 
 grid::grid()
 {
-    window = SDL_CreateWindow("game of life" , SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,400,400,0);
+    window = SDL_CreateWindow("game of life" , SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,wx,wy,0);
     render = SDL_CreateRenderer(window , - 1 , 0);
-    for(int i=0;i<20;i++)
+    for(int i=0;i<SIZE;i++)
     {
-        data[i].fill(0);
+        data[i].fill(false);
     }
 }
 
 void grid::update()
 {
-    for(int y=0;y<20;y++)
+    changes.clear();
+    for(int y=0;y<SIZE;y++)
     {
-        for(int x=0;x<20;x++)
+        for(int x=0;x<SIZE;x++)
         {
             int c = neightbour_count(x,y);
             if(data[y][x])
@@ -33,7 +34,6 @@ void grid::update()
         cell s = changes[i];
         data[s.y][s.x] = s.status;
     }
-    changes.clear();
 }
 
 int grid::neightbour_count(int x , int y)
@@ -43,15 +43,25 @@ int grid::neightbour_count(int x , int y)
     {
         for(int dx=-1;dx<=1;dx++)
         {
-            if(dx != 0 && dy != 0)
+            if(dx != 0 || dy != 0)
             {
                 if(get(x+dx , y+dy)) c++;
             }
         }
     }
-
-
     return c;
+}
+
+void grid::fill_random(int alive_probability)
+{
+    for(int y=0;y<SIZE;y++)
+    {
+        for(int x=0;x<SIZE;x++)
+        {
+            int r = rand() % 100;
+            if(alive_probability > r) data[y][x] = true;
+        }
+    }
 }
 
 grid::~grid()
@@ -67,8 +77,8 @@ void grid::set(int x , int y , bool alive)
 
 bool grid::get(int x , int y)
 {
-    if(x < 0 || x > 20) return false;
-    if(y < 0 || y > 20) return false;
+    if(x < 0 || x > SIZE) return false;
+    if(y < 0 || y > SIZE) return false;
 
     return data[y][x];
 }
@@ -77,14 +87,14 @@ void grid::draw()
 {
     SDL_RenderClear(render);
     SDL_SetRenderDrawColor(render , 255 , 255 , 255 , 255);
-    for(int y=0;y<20;y++)
+    for(int y=0;y<SIZE;y++)
     {
-        for(int x=0;x<20;x++)
+        for(int x=0;x<SIZE;x++)
         {
             if(data[y][x])
             {
-                SDL_Rect* r = new SDL_Rect{20*x,20*y,20,20};
-                SDL_RenderFillRect(render , r);
+                SDL_FRect* r = new SDL_FRect{(float)wx*x / SIZE,(float)wy*y / SIZE,(float)wx/SIZE,(float)wy/SIZE};
+                SDL_RenderFillRectF(render , r);
                 delete r;
             }
         }

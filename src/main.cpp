@@ -4,11 +4,7 @@
 int main(int argc ,char* argv[])
 {
     grid* grd = new grid();
-    grd->set(0 , 0 , true);
-    grd->set(0 , 2 , true);
-    grd->set(1 , 1 , true);
-    grd->set(1 , 2 , true);
-    grd->set(2 , 1 , true);
+    grd->fill_random(20);
     SDL_Event* e = new SDL_Event();
     bool running = true;
     while(running)
