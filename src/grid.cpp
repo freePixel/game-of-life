@@ -3,7 +3,6 @@
 
 void grid::update()
 {
-    std::cout << data.size() << "\n";
     changes.clear();
     for(int i=0;i<data.size();i++){
         int x = data[i].x;

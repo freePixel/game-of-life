@@ -23,7 +23,7 @@ point camera::cameraToWorldCoordinate(int x , int y)
     rx -= px;
     ry -= py;
 
-    std::cout << "(" << x << "," << y << ") -> " << "(" << (int)rx << "," << (int)ry << ")" << "\n";
+   
     return point(int(rx) , int(ry));
 }
 
