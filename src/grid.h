@@ -17,6 +17,12 @@ struct point
         this->x = x;
         this->y = y;
     }
+    point& operator=(const point& p)
+    {
+        x = p.x;
+        y = p.y;
+        return *this;
+    }
 
 };
 

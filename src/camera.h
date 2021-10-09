@@ -6,6 +6,7 @@
 class camera
 {
     public:
+    point cameraToWorldCoordinate(int x , int y);
     camera(grid* grd);
     ~camera();
     void draw();

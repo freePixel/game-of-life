@@ -13,6 +13,20 @@ camera::~camera()
     SDL_DestroyRenderer(render);
 }
 
+point camera::cameraToWorldCoordinate(int x , int y)
+{
+    float rx = 0;
+    float ry = 0;
+    rx = x / (wx /scf);
+    ry = y / (wy / scf);
+
+    rx -= px;
+    ry -= py;
+
+    std::cout << "(" << x << "," << y << ") -> " << "(" << (int)rx << "," << (int)ry << ")" << "\n";
+    return point(int(rx) , int(ry));
+}
+
 void camera::move(float x , float y)
 {
     px += x * scf / 20;
