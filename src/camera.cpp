@@ -76,15 +76,19 @@ void camera::draw()
 {
     SDL_RenderClear(render);
 
-    set_object_color(mode , FIGURE::LINE);
-
-    float dx = int(px*wx/scf) % int(wx/scf);
-    float dy = int(py*wy/scf) % int(wy/scf);
-
-    for(int i=0;i<scf;i++)
+    if(scf < 100) //only render line in small zoom
     {
-        SDL_RenderDrawLineF(render,dx+wx*i/scf,0,dx+wx*i/scf,wy);
-        SDL_RenderDrawLineF(render,0,dy+wx*i/scf,wx,dy+wx*i/scf);
+
+        set_object_color(mode , FIGURE::LINE);
+
+        float dx = int(px*wx/scf) % int(wx/scf);
+        float dy = int(py*wy/scf) % int(wy/scf);
+
+        for(int i=0;i<scf;i++)
+        {
+            SDL_RenderDrawLineF(render,dx+wx*i/scf,0,dx+wx*i/scf,wy);
+            SDL_RenderDrawLineF(render,0,dy+wx*i/scf,wx,dy+wx*i/scf);
+        }
     }
     set_object_color(mode , FIGURE::CELL);
     for(auto it = grd->data.begin(); it != grd->data.end(); ++it)
