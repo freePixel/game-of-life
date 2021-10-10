@@ -34,6 +34,9 @@ int main(int argc ,char* argv[])
                         case SDLK_p:
                         grd->setf(u.x,u.y, true);
                         break;
+                        case SDLK_m:
+                        cam.change_color_mode();
+                        break;
                     }
                 break;
                 case SDL_MOUSEWHEEL:
