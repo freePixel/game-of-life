@@ -35,12 +35,23 @@ void camera::move(float x , float y)
 
 void camera::scale(float factor)
 {
-    scf *= factor;
+    float f = scf * factor;
+    if(f >= 1 && f < 800) scf = f;
 }
 
 void camera::draw()
 {
     SDL_RenderClear(render);
+    SDL_SetRenderDrawColor(render , 23 , 12 , 5 , 15);
+
+    float dx = int(px*wx/scf) % int(wx/scf);
+    float dy = int(py*wy/scf) % int(wy/scf);
+
+    for(int i=0;i<scf;i++)
+    {
+        SDL_RenderDrawLineF(render,dx+wx*i/scf,0,dx+wx*i/scf,wy);
+        SDL_RenderDrawLineF(render,0,dy+wx*i/scf,wx,dy+wx*i/scf);
+    }
     SDL_SetRenderDrawColor(render , 255 , 255 , 255 , 255);
     for(auto it = grd->data.begin(); it != grd->data.end(); ++it)
     {
@@ -48,6 +59,9 @@ void camera::draw()
         SDL_RenderFillRectF(render , r);
         delete r;
     }
+    //Draw lines
+    
+
     SDL_SetRenderDrawColor(render,0,0,0,0);
     SDL_RenderPresent(render);
 }
